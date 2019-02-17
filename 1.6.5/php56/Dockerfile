@@ -1,6 +1,9 @@
-FROM alpine:3.5
+ARG ALPINE_VERSION=3.5
+FROM alpine:${ALPINE_VERSION}
 
 LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
+
+ARG COMPOSER_VERSION=1.6.5
 
 RUN apk add --update \
     php5 \
@@ -39,7 +42,8 @@ RUN apk add --update \
     make
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
-    curl https://getcomposer.org/download/1.6.5/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
+    curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
+     -o /usr/bin/composer \ && chmod +x /usr/bin/composer
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 

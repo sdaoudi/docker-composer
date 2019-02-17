@@ -1,6 +1,9 @@
-FROM alpine:3.8
+ARG ALPINE_VERSION=3.8
+FROM alpine:${ALPINE_VERSION}
 
 LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
+
+ARG COMPOSER_VERSION=1.8.4
 
 RUN apk add --update \
     php7-fpm \
@@ -36,7 +39,8 @@ RUN apk add --update \
     curl
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
-    curl https://getcomposer.org/download/1.8.4/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
+    curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
+     -o /usr/bin/composer \ && chmod +x /usr/bin/composer
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
