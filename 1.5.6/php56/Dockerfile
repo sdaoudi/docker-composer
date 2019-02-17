@@ -43,4 +43,6 @@ RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
+USER www-data
+
 WORKDIR /src
