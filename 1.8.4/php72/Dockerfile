@@ -40,7 +40,7 @@ RUN apk add --update \
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
-     -o /usr/bin/composer \ && chmod +x /usr/bin/composer
+    -o /usr/bin/composer && chmod +x /usr/bin/composer
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
