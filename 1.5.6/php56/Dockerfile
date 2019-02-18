@@ -5,34 +5,44 @@ LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
 
 ARG COMPOSER_VERSION=1.5.6
 
-RUN apk add --update \
+ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
+
+RUN apk add --update libressl libressl-dev libssl1.0 redis \
     php5 \
     php5-apcu \
     php5-bcmath \
     php5-bz2 \
     php5-cli \
+    php5-common  \
     php5-ctype \
     php5-curl \
+    php5-dev \
     php5-dom \
     php5-exif \
     php5-gd \
+    php5-gmp \
     php5-gettext \
     php5-iconv \
     php5-intl \
     php5-json \
+    php5-ldap \
     php5-mcrypt \
     php5-memcache \
     php5-mysql \
     php5-mysqli \
+    php5-opcache \
     php5-openssl \
     php5-pcntl \
+    php5-pdo \
     php5-pdo_mysql \
     php5-pdo_pgsql \
     php5-pdo_sqlite \
+    php5-pear \
     php5-phar \
     php5-posix \
     php5-soap \
     php5-xcache \
+    php5-xml \
     php5-xmlreader \
     php5-xmlrpc \
     php5-xsl \
@@ -40,6 +50,14 @@ RUN apk add --update \
     php5-zlib \
     curl \
     make
+
+# Install php addons
+RUN apk add $PHPIZE_DEPS && \
+    sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) && \
+    pear config-set http_proxy $HTTP_PROXY && \
+    pecl install mongo redis && \
+    apk del --purge $PHPIZE_DEPS && \
+    rm -rf /var/cache/apk/*
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
@@ -49,4 +67,6 @@ RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
 USER www-data
 
-WORKDIR /src
+RUN mkdir /var/www && chown -R www-data:www-data /var/www
+
+WORKDIR /var/www
