@@ -61,9 +61,11 @@ We use ``www-data`` as default user of this image:
 - Mysql
 - Mysqli
 - OPCache
+- Redis
 - OpenSSL
 - pcntl
 - PDO
+- Mongo
 - Pear
 - Phar
 - Posix
