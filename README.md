@@ -37,3 +37,41 @@ You can use ``/var/www`` as a default working directory:
 We use ``www-data`` as default user of this image:
 
 	$ docker run --rm -ti sdaoudi/composer:1.8.4-php56 whoami
+
+## Available PHP extensions (Modules) ##
+
+- Apcu
+- BCmath
+- Bz2
+- Cli
+- Ctype
+- Curl
+- DOM
+- Exif
+- GD
+- Gmp
+- GetText
+- Iconv
+- Intl
+- json
+- Ldap
+- MCrypt
+- MemCache
+- MemCached
+- Mysql
+- Mysqli
+- OPCache
+- OpenSSL
+- pcntl
+- PDO
+- Pear
+- Phar
+- Posix
+- SOAP
+- XCache
+- Xml
+- Xmlreader
+- Xmlrpc
+- Xsl
+- Zip
+
