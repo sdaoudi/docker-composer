@@ -28,7 +28,7 @@ Composer 1.6.5 with php 7.2 example:
 
 ## Working directory ##
 
-You can use ``/src`` as a working directory:
+You can use ``/var/www`` as a default working directory:
 
 	$ docker run --rm -ti sdaoudi/composer:1.8.4-php72 pwd
 
