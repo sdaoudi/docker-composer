@@ -5,7 +5,14 @@ LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
 
 ARG COMPOSER_VERSION=1.5.6
 
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG NO_PROXY=""
+
 ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
+ENV HTTP_PROXY=$HTTP_PROXY
+ENV HTTPS_PROXY=$HTTPS_PROXY
+ENV NO_PROXY=$NO_PROXY
 
 RUN apk add --update libressl libressl-dev libssl1.0 redis \
     php5 \
@@ -48,8 +55,7 @@ RUN apk add --update libressl libressl-dev libssl1.0 redis \
     php5-xsl \
     php5-zip \
     php5-zlib \
-    curl \
-    make
+    curl
 
 # Install php addons
 RUN apk add $PHPIZE_DEPS && \
@@ -59,14 +65,36 @@ RUN apk add $PHPIZE_DEPS && \
     apk del --purge $PHPIZE_DEPS && \
     rm -rf /var/cache/apk/*
 
+RUN apk --update add libtool make grep autoconf gcc libc-dev zlib-dev
+
+RUN cd /tmp \
+    && apk --update add cyrus-sasl-dev libmemcached-dev \
+    && curl -L --progress-bar -o "php-memcached-2.2.0.tar.gz" "https://github.com/php-memcached-dev/php-memcached/archive/2.2.0.tar.gz" \
+    && tar -xzvf php-memcached-2.2.0.tar.gz \
+    && cd php-memcached-2.2.0 \
+    && phpize \
+    && ./configure --disable-memcached-sasl \
+    && make \
+    && make install \
+    && cp modules/memcached.so /usr/lib/php5/modules/memcached.so \
+    && echo "extension = memcached.so" >> /etc/php5/php.ini \
+    && chmod -R +x /usr/lib/php5/modules/ \
+    && cd .. \
+    && rm -rf php-memcached-2.2.0 \
+    && rm php-memcached-2.2.0.tar.gz
+
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
      -o /usr/bin/composer && chmod +x /usr/bin/composer
 
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
+ENV NO_PROXY=""
+
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
-USER www-data
-
 RUN mkdir /var/www && chown -R www-data:www-data /var/www
+
+USER www-data
 
 WORKDIR /var/www
