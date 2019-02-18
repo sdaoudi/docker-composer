@@ -3,6 +3,8 @@ SHELL = /bin/sh
 DOCKER ?= $(shell which docker)
 DOCKER_REPOSITORY := sdaoudi/composer
 
+PROXY_CONFIG=--build-arg HTTP_PROXY=$(HTTP_PROXY) --build-arg HTTPS_PROXY=$(HTTPS_PROXY) --build-arg NO_PROXY=$(NO_PROXY)
+
 COM_COLOR   = \033[0;35m
 OBJ_COLOR   = \033[0;36m
 OK_COLOR    = \033[0;32m
@@ -58,7 +60,7 @@ all: ## Do the action to all composer version
 
 #####
 build: ## Build an individual image (NODE_VERSION)
-	${DOCKER} build --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} ${COMPOSER_VERSION}/php${PHP_VERSION}
+	${DOCKER} build --no-cache ${PROXY_CONFIG} --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} ${COMPOSER_VERSION}/php${PHP_VERSION}
 
 #####
 deploy: push ## Deploy a specific version
