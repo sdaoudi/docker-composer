@@ -4,6 +4,14 @@ FROM alpine:${ALPINE_VERSION}
 LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
 
 ARG COMPOSER_VERSION=1.6.5
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG NO_PROXY=""
+
+ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
+ENV HTTP_PROXY=$HTTP_PROXY
+ENV HTTPS_PROXY=$HTTPS_PROXY
+ENV NO_PROXY=$NO_PROXY
 
 RUN apk add --update \
     php7-fpm \
@@ -42,8 +50,14 @@ RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
      -o /usr/bin/composer && chmod +x /usr/bin/composer
 
+ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
+ENV NO_PROXY=""
+
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
+
+RUN mkdir /var/www && chown -R www-data:www-data /var/www
 
 USER www-data
 
-WORKDIR /src
+WORKDIR /var/www
