@@ -61,6 +61,7 @@ ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
 # Install php addons
 RUN apk add $PHPIZE_DEPS && \
     sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) && \
+    pear config-set http_proxy $HTTP_PROXY && \
     pecl install mongo redis && \
     apk del --purge $PHPIZE_DEPS && \
     rm -rf /var/cache/apk/*
