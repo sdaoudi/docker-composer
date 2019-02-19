@@ -60,7 +60,7 @@ all: ## Do the action to all composer version
 
 #####
 build: ## Build an individual image (NODE_VERSION)
-	${DOCKER} build --no-cache ${PROXY_CONFIG} --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} ${COMPOSER_VERSION}/php${PHP_VERSION}
+	${DOCKER} build --no-cache ${PROXY_CONFIG} --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} php${PHP_VERSION}
 
 #####
 deploy: push ## Deploy a specific version

@@ -3,12 +3,13 @@ FROM alpine:${ALPINE_VERSION}
 
 LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
 
-ARG COMPOSER_VERSION=1.6.5
+ARG COMPOSER_VERSION=1.5.6
+ARG MEMCACHED_VERSION=2.2.0
+
 ARG HTTP_PROXY=""
 ARG HTTPS_PROXY=""
 ARG NO_PROXY=""
 
-ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
 ENV HTTP_PROXY=$HTTP_PROXY
 ENV HTTPS_PROXY=$HTTPS_PROXY
 ENV NO_PROXY=$NO_PROXY
@@ -56,21 +57,22 @@ RUN apk add --update libressl libressl-dev libssl1.0 redis \
     php5-zlib \
     curl
 
+ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
 # Install php addons
 RUN apk add $PHPIZE_DEPS && \
     sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) && \
-    pear config-set http_proxy $HTTP_PROXY && \
     pecl install mongo redis && \
     apk del --purge $PHPIZE_DEPS && \
     rm -rf /var/cache/apk/*
 
-RUN apk --update add libtool make grep autoconf gcc libc-dev zlib-dev
+ENV PHPIZE_DEPS="libtool make autoconf gcc libc-dev zlib-dev"
 
 RUN cd /tmp \
-    && apk --update add cyrus-sasl-dev libmemcached-dev \
-    && curl -L --progress-bar -o "php-memcached-2.2.0.tar.gz" "https://github.com/php-memcached-dev/php-memcached/archive/2.2.0.tar.gz" \
-    && tar -xzvf php-memcached-2.2.0.tar.gz \
-    && cd php-memcached-2.2.0 \
+    && apk --update add $PHPIZE_DEPS cyrus-sasl-dev libmemcached-dev \
+    && curl -L --progress-bar -o "php-memcached-${MEMCACHED_VERSION}.tar.gz" \
+        "https://github.com/php-memcached-dev/php-memcached/archive/${MEMCACHED_VERSION}.tar.gz" \
+    && tar -xzvf php-memcached-${MEMCACHED_VERSION}.tar.gz \
+    && cd php-memcached-${MEMCACHED_VERSION} \
     && phpize \
     && ./configure --disable-memcached-sasl \
     && make \
@@ -79,16 +81,20 @@ RUN cd /tmp \
     && echo "extension = memcached.so" >> /etc/php5/php.ini \
     && chmod -R +x /usr/lib/php5/modules/ \
     && cd .. \
-    && rm -rf php-memcached-2.2.0 \
-    && rm php-memcached-2.2.0.tar.gz
+    && rm -rf php-memcached-${MEMCACHED_VERSION} \
+    && rm php-memcached-${MEMCACHED_VERSION}.tar.gz \
+    && apk del --purge $PHPIZE_DEPS
 
-RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
-    curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
+RUN curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
      -o /usr/bin/composer && chmod +x /usr/bin/composer
+
+RUN rm -rf /var/cache/apk/*
+RUN rm -rf /tmp/*
 
 ENV HTTP_PROXY=""
 ENV HTTPS_PROXY=""
 ENV NO_PROXY=""
+ENV PHPIZE_DEPS=""
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
