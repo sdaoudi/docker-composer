@@ -10,11 +10,17 @@ ARG HTTP_PROXY=""
 ARG HTTPS_PROXY=""
 ARG NO_PROXY=""
 
-ENV HTTP_PROXY=$HTTP_PROXY
-ENV HTTPS_PROXY=$HTTPS_PROXY
-ENV NO_PROXY=$NO_PROXY
+ENV HTTP_PROXY  $HTTP_PROXY
+ENV HTTPS_PROXY $HTTPS_PROXY
+ENV NO_PROXY    $NO_PROXY
 
-RUN apk add --update libressl libressl-dev libssl1.0 redis \
+ENV COMPOSER_ALLOW_SUPERUSER    1
+ENV COMPOSER_HOME               "/composer"
+ENV PHP_MEMORY_LIMIT            512M
+
+RUN apk add --update libressl libressl-dev libssl1.0 \
+    redis \
+    curl \
     php5 \
     php5-apcu \
     php5-bcmath \
@@ -55,47 +61,45 @@ RUN apk add --update libressl libressl-dev libssl1.0 redis \
     php5-xsl \
     php5-zip \
     php5-zlib \
-    curl
+    && sed -i "s|;*memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php5/php.ini
 
-ENV PHPIZE_DEPS="autoconf g++ make icu-dev libxslt-dev"
+
+ENV PHPIZE_DEPS "autoconf g++ make icu-dev libxslt-dev"
 # Install php addons
-RUN apk add $PHPIZE_DEPS && \
-    sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) && \
-    pear config-set http_proxy $HTTP_PROXY && \
-    pecl install mongo redis && \
-    apk del --purge $PHPIZE_DEPS && \
-    rm -rf /var/cache/apk/*
+RUN apk add $PHPIZE_DEPS \
+    && sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) \
+    && pecl install mongo redis \
+    && apk del --purge $PHPIZE_DEPS
 
-ENV PHPIZE_DEPS="libtool make autoconf gcc libc-dev zlib-dev"
+# Download and Install Memcached extension
+ENV PHPIZE_DEPS "libtool make autoconf gcc libc-dev zlib-dev"
 
 RUN cd /tmp \
     && apk --update add $PHPIZE_DEPS cyrus-sasl-dev libmemcached-dev \
     && curl -L --progress-bar -o "php-memcached-${MEMCACHED_VERSION}.tar.gz" \
-        "https://github.com/php-memcached-dev/php-memcached/archive/${MEMCACHED_VERSION}.tar.gz" \
+       "https://github.com/php-memcached-dev/php-memcached/archive/${MEMCACHED_VERSION}.tar.gz" \
     && tar -xzvf php-memcached-${MEMCACHED_VERSION}.tar.gz \
     && cd php-memcached-${MEMCACHED_VERSION} \
     && phpize \
-    && ./configure --disable-memcached-sasl \
-    && make \
-    && make install \
+    && ./configure --disable-memcached-sasl && make && make install \
     && cp modules/memcached.so /usr/lib/php5/modules/memcached.so \
     && echo "extension = memcached.so" >> /etc/php5/php.ini \
     && chmod -R +x /usr/lib/php5/modules/ \
-    && cd .. \
-    && rm -rf php-memcached-${MEMCACHED_VERSION} \
-    && rm php-memcached-${MEMCACHED_VERSION}.tar.gz \
     && apk del --purge $PHPIZE_DEPS
 
-RUN curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
-     -o /usr/bin/composer && chmod +x /usr/bin/composer
+RUN mkdir ${COMPOSER_HOME} \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php composer-setup.php --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
+    && php -r "unlink('composer-setup.php');"
 
-RUN rm -rf /var/cache/apk/*
-RUN rm -rf /tmp/*
+# Clean caches
+RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
-ENV NO_PROXY=""
-ENV PHPIZE_DEPS=""
+ENV PHPIZE_DEPS ""
+ENV HTTP_PROXY  ""
+ENV HTTPS_PROXY ""
+ENV NO_PROXY    ""
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
