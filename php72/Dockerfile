@@ -10,11 +10,17 @@ ARG HTTP_PROXY=""
 ARG HTTPS_PROXY=""
 ARG NO_PROXY=""
 
-ENV HTTP_PROXY=$HTTP_PROXY
-ENV HTTPS_PROXY=$HTTPS_PROXY
-ENV NO_PROXY=$NO_PROXY
+ENV HTTP_PROXY  $HTTP_PROXY
+ENV HTTPS_PROXY $HTTPS_PROXY
+ENV NO_PROXY    $NO_PROXY
 
-RUN apk add --update libressl libressl-dev libssl1.0 curl redis \
+ENV COMPOSER_ALLOW_SUPERUSER    1
+ENV COMPOSER_HOME               "/composer"
+ENV PHP_MEMORY_LIMIT            512M
+
+RUN apk add --update libressl libressl-dev libssl1.0 \
+    curl \
+    redis \
     php7 \
     php7-apcu \
     php7-bcmath \
@@ -54,15 +60,19 @@ RUN apk add --update libressl libressl-dev libssl1.0 curl redis \
     php7-xsl \
     php7-zip
 
-RUN  curl https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar \
-     -o /usr/bin/composer && chmod +x /usr/bin/composer
+RUN mkdir ${COMPOSER_HOME} \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php composer-setup.php --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
+    && php -r "unlink('composer-setup.php');"
 
-RUN rm -rf /var/cache/apk/*
-RUN rm -rf /tmp/*
+# Clean caches
+RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
-ENV NO_PROXY=""
+ENV PHPIZE_DEPS ""
+ENV HTTP_PROXY  ""
+ENV HTTPS_PROXY ""
+ENV NO_PROXY    ""
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
