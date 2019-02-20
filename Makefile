@@ -15,6 +15,8 @@ NO_COLOR    = \033[m
 COMPOSER_VERSION?=1.8.4
 PHP_VERSION?=72
 
+BUILD_ARGS=--build-arg PHP_VERSION=${PHP_VERSION} --build-arg COMPOSER_VERSION=${COMPOSER_VERSION}
+
 TARGETS:=$(MAKEFILE_LIST)
 
 # Phony targets
@@ -60,7 +62,7 @@ all: ## Do the action to all composer version
 
 #####
 build: ## Build an individual image (NODE_VERSION)
-	${DOCKER} build --no-cache ${PROXY_CONFIG} --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} php${PHP_VERSION}
+	${DOCKER} build --no-cache ${PROXY_CONFIG} ${BUILD_ARGS} --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} php${PHP_VERSION}
 
 #####
 deploy: push ## Deploy a specific version
