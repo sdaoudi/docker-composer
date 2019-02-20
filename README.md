@@ -14,8 +14,11 @@ and php 7.2.
 - sdaoudi/composer:1.5.6-php56
 - sdaoudi/composer:1.5.6-php72
 - sdaoudi/composer:1.6.3-php56
+- sdaoudi/composer:1.6.3-php72
 - sdaoudi/composer:1.6.5-php56
 - sdaoudi/composer:1.6.5-php72
+- sdaoudi/composer:1.7.3-php56
+- sdaoudi/composer:1.7.3-php72
 - sdaoudi/composer:1.8.4-php56
 - sdaoudi/composer:1.8.4-php72
 
