@@ -41,40 +41,9 @@ We use ``www-data`` as default user of this image:
 
 ## Available PHP extensions (Modules) ##
 
-- Apcu
-- BCmath
-- Bz2
-- Cli
-- Ctype
-- Curl
-- DOM
-- Exif
-- GD
-- Gmp
-- GetText
-- Iconv
-- Intl
-- json
-- Ldap
-- MCrypt
-- MemCache
-- MemCached
-- Mysql
-- Mysqli
-- OPCache
-- Redis
-- OpenSSL
-- pcntl
-- PDO
-- Mongo
-- Pear
-- Phar
-- Posix
-- SOAP
-- XCache
-- Xml
-- Xmlreader
-- Xmlrpc
-- Xsl
-- Zip
-
+&nbsp;     | &nbsp;    | &nbsp;  | &nbsp;  | &nbsp; | &nbsp;  | &nbsp;| &nbsp;
+---        | ---       | ---     | ---     |---     |---      |---    |---
+apcu       | bcmath    | bz2     | cli     | ctype  | curl    | dom   | exif  
+gd         | gmp       | gettext | iconv   | intl   | json    | ldap  | mcrypt
+memcache   | memcached | mysql   | opcache | redis  | openssl | pcntl | pdo   
+mongo      | pear      | phar    | posix   | xcache | xml     | xsl   | zip   
