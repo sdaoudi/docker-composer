@@ -49,3 +49,11 @@ apcu       | bcmath    | bz2     | cli     | ctype  | curl    | dom   | exif
 gd         | gmp       | gettext | iconv   | intl   | json    | ldap  | mcrypt
 memcache   | memcached | mysql   | opcache | redis  | openssl | pcntl | pdo   
 mongo      | pear      | phar    | posix   | xcache | xml     | xsl   | zip   
+
+## Build command ##
+
+You can build a composer image with this command:
+
+```
+$ make build PHP_VERSION=56 COMPOSER_VERSION=1.6.5
+```
