@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/sdaoudi/docker-composer.svg?branch=master)](https://travis-ci.org/sdaoudi/docker-composer)
-
 # Composer alpine docker image #
+
+[![Build Status](https://travis-ci.org/sdaoudi/docker-composer.svg?branch=master)](https://travis-ci.org/sdaoudi/docker-composer)
 
 A minimal Dockerfile based on alpine image.
 
