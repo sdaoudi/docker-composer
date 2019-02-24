@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=3.8
+ARG ALPINE_VERSION=3.9
 FROM alpine:${ALPINE_VERSION}
 
 LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
@@ -18,7 +18,7 @@ ENV COMPOSER_ALLOW_SUPERUSER    1
 ENV COMPOSER_HOME               "/composer"
 ENV PHP_MEMORY_LIMIT            512M
 
-RUN apk add --update libressl libressl-dev libssl1.0 \
+RUN apk add --update libressl libressl-dev libssl1.1 \
     curl \
     redis \
     php7 \

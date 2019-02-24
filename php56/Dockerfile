@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=3.5
+ARG ALPINE_VERSION=3.8
 FROM alpine:${ALPINE_VERSION}
 
 LABEL maintainer="DAOUDI Soufian <soufian.daoudi2@gmail.com>"
@@ -40,7 +40,6 @@ RUN apk add --update libressl libressl-dev libssl1.0 \
     php5-json \
     php5-ldap \
     php5-mcrypt \
-    php5-memcache \
     php5-mysql \
     php5-mysqli \
     php5-opcache \
@@ -54,7 +53,6 @@ RUN apk add --update libressl libressl-dev libssl1.0 \
     php5-phar \
     php5-posix \
     php5-soap \
-    php5-xcache \
     php5-xml \
     php5-xmlreader \
     php5-xmlrpc \
@@ -63,12 +61,15 @@ RUN apk add --update libressl libressl-dev libssl1.0 \
     php5-zlib \
     && sed -i "s|;*memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php5/php.ini
 
+RUN ln -s /usr/bin/php5 /usr/bin/php \
+    && ln -s /usr/bin/phpize5 /usr/bin/phpize \
+	&& ln -s /usr/bin/php-config5 /usr/bin/php-config
 
 ENV PHPIZE_DEPS "autoconf g++ make icu-dev libxslt-dev"
 # Install php addons
 RUN apk add $PHPIZE_DEPS \
     && sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) \
-    && pecl install mongo redis \
+    && pecl install mongo memcache redis \
     && apk del --purge $PHPIZE_DEPS
 
 # Download and Install Memcached extension
@@ -81,11 +82,14 @@ RUN cd /tmp \
     && tar -xzvf php-memcached-${MEMCACHED_VERSION}.tar.gz \
     && cd php-memcached-${MEMCACHED_VERSION} \
     && phpize \
-    && ./configure --disable-memcached-sasl && make && make install \
-    && cp modules/memcached.so /usr/lib/php5/modules/memcached.so \
+    && ./configure --disable-memcached-sasl \
+    && make && make install \
+    && apk del --purge $PHPIZE_DEPS \
+    && echo "extension = memcache.so" >> /etc/php5/php.ini \
+    && echo "extension = mongo.so" >> /etc/php5/php.ini \
     && echo "extension = memcached.so" >> /etc/php5/php.ini \
-    && chmod -R +x /usr/lib/php5/modules/ \
-    && apk del --purge $PHPIZE_DEPS
+    && echo "extension = redis.so" >> /etc/php5/php.ini \
+    && chmod -R +x /usr/lib/php5/modules/
 
 RUN mkdir ${COMPOSER_HOME} \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
