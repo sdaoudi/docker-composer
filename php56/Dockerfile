@@ -18,7 +18,10 @@ ENV COMPOSER_ALLOW_SUPERUSER    1
 ENV COMPOSER_HOME               "/composer"
 ENV PHP_MEMORY_LIMIT            512M
 
-RUN apk add --update libressl libressl-dev libssl1.0 \
+RUN apk add --update libressl \
+    libmemcached-dev \
+    libressl-dev \
+    libssl1.0 \
     redis \
     curl \
     php5 \
@@ -65,27 +68,21 @@ RUN ln -s /usr/bin/php5 /usr/bin/php \
     && ln -s /usr/bin/phpize5 /usr/bin/phpize \
 	&& ln -s /usr/bin/php-config5 /usr/bin/php-config
 
-ENV PHPIZE_DEPS "autoconf g++ make icu-dev libxslt-dev"
+ENV PHPIZE_DEPS " \
+        autoconf \
+        g++ \
+        make \
+        icu-dev \
+        libxslt-dev \
+    "
+
 # Install php addons
 RUN apk add $PHPIZE_DEPS \
     && sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) \
-    && pecl install mongo memcache redis \
+    && pecl install mongo memcache redis memcached-${MEMCACHED_VERSION} \
     && apk del --purge $PHPIZE_DEPS
 
-# Download and Install Memcached extension
-ENV PHPIZE_DEPS "libtool make autoconf gcc libc-dev zlib-dev"
-
-RUN cd /tmp \
-    && apk --update add $PHPIZE_DEPS cyrus-sasl-dev libmemcached-dev \
-    && curl -L --progress-bar -o "php-memcached-${MEMCACHED_VERSION}.tar.gz" \
-       "https://github.com/php-memcached-dev/php-memcached/archive/${MEMCACHED_VERSION}.tar.gz" \
-    && tar -xzvf php-memcached-${MEMCACHED_VERSION}.tar.gz \
-    && cd php-memcached-${MEMCACHED_VERSION} \
-    && phpize \
-    && ./configure --disable-memcached-sasl \
-    && make && make install \
-    && apk del --purge $PHPIZE_DEPS \
-    && echo "extension = memcache.so" >> /etc/php5/php.ini \
+RUN echo "extension = memcache.so" >> /etc/php5/php.ini \
     && echo "extension = mongo.so" >> /etc/php5/php.ini \
     && echo "extension = memcached.so" >> /etc/php5/php.ini \
     && echo "extension = redis.so" >> /etc/php5/php.ini \
