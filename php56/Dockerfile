@@ -24,6 +24,7 @@ RUN apk add --update libressl \
     libssl1.0 \
     redis \
     curl \
+    su-exec \
     php5 \
     php5-apcu \
     php5-bcmath \
@@ -76,7 +77,7 @@ ENV PHPIZE_DEPS " \
         libxslt-dev \
     "
 
-# Install php addons
+ Install php addons
 RUN apk add $PHPIZE_DEPS \
     && sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) \
     && pecl install mongo memcache redis memcached-${MEMCACHED_VERSION} \
@@ -102,10 +103,11 @@ ENV HTTP_PROXY  ""
 ENV HTTPS_PROXY ""
 ENV NO_PROXY    ""
 
-RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
-
-RUN mkdir /var/www && chown -R www-data:www-data /var/www
-
-USER www-data
+RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data \
+    && mkdir /var/www && chown -R www-data:www-data /var/www
 
 WORKDIR /var/www
+
+COPY docker-entrypoint.sh /
+
+ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
