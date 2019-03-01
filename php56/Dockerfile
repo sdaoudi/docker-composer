@@ -77,7 +77,7 @@ ENV PHPIZE_DEPS " \
         libxslt-dev \
     "
 
- Install php addons
+# Install php addons
 RUN apk add $PHPIZE_DEPS \
     && sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) \
     && pecl install mongo memcache redis memcached-${MEMCACHED_VERSION} \
