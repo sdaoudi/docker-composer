@@ -38,12 +38,6 @@ You can use ``/var/www`` as a default working directory:
 
 	$ docker run --rm -ti sdaoudi/composer:1.8.4-php72 pwd
 
-## Default user ##
-
-We use ``www-data`` as default user of this image:
-
-	$ docker run --rm -ti sdaoudi/composer:1.8.4-php56 whoami
-
 ## Available PHP extensions (Modules) ##
 
 &nbsp;     | &nbsp;    | &nbsp;  | &nbsp;  | &nbsp; | &nbsp;  | &nbsp;| &nbsp;
