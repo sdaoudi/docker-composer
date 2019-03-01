@@ -78,8 +78,8 @@ RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
 RUN mkdir /var/www && chown www-data:www-data /var/www
 
-COPY docker-entrypoint.sh /
-
 WORKDIR /var/www
+
+COPY docker-entrypoint.sh /
 
 ENTRYPOINT ["sh", "/docker-entrypoint.sh"]

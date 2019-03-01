@@ -77,7 +77,7 @@ ENV PHPIZE_DEPS " \
         libxslt-dev \
     "
 
- Install php addons
+# Install php addons
 RUN apk add $PHPIZE_DEPS \
     && sed -i 's/^exec $PHP -C -n/exec $PHP -C/g' $(which pecl) \
     && pecl install mongo memcache redis memcached-${MEMCACHED_VERSION} \
@@ -104,7 +104,7 @@ ENV HTTPS_PROXY ""
 ENV NO_PROXY    ""
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data \
-    && mkdir /var/www && chown -R www-data:www-data /var/www
+    && mkdir /var/www && chown www-data:www-data /var/www
 
 WORKDIR /var/www
 
