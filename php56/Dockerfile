@@ -104,8 +104,7 @@ ENV HTTPS_PROXY ""
 ENV NO_PROXY    ""
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data \
-
-RUN mkdir /var/www
+    && mkdir /var/www
 
 WORKDIR /var/www
 
