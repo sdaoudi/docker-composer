@@ -21,6 +21,7 @@ ENV PHP_MEMORY_LIMIT            512M
 RUN apk add --update libressl libressl-dev libssl1.1 \
     curl \
     redis \
+    su-exec \
     php7 \
     php7-apcu \
     php7-bcmath \
