@@ -77,7 +77,7 @@ ENV NO_PROXY    ""
 
 RUN addgroup -S www-data && adduser -D -g '' -G www-data www-data
 
-RUN mkdir /var/www && chown www-data:www-data /var/www
+RUN mkdir /var/www
 
 WORKDIR /var/www
 

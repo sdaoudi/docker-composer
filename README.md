@@ -1,5 +1,6 @@
 # Composer alpine docker image #
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/sdaoudi/docker-composer.svg?branch=master)](https://travis-ci.org/sdaoudi/docker-composer)
 
 A minimal Dockerfile based on alpine image.
@@ -11,16 +12,17 @@ and php 7.2.
 
 ## Available tags ##
 
-- sdaoudi/composer:1.5.6-php56
-- sdaoudi/composer:1.5.6-php72
-- sdaoudi/composer:1.6.3-php56
-- sdaoudi/composer:1.6.3-php72
-- sdaoudi/composer:1.6.5-php56
-- sdaoudi/composer:1.6.5-php72
-- sdaoudi/composer:1.7.3-php56
-- sdaoudi/composer:1.7.3-php72
-- sdaoudi/composer:1.8.4-php56
-- sdaoudi/composer:1.8.4-php72
+- PHP56:
+    - sdaoudi/composer:1.5.6-php56
+    - sdaoudi/composer:1.6.5-php56
+    - sdaoudi/composer:1.7.3-php56
+    - sdaoudi/composer:1.8.4-php56
+
+- PHP72:
+    - sdaoudi/composer:1.5.6-php72
+    - sdaoudi/composer:1.6.5-php72
+    - sdaoudi/composer:1.7.3-php72
+    - sdaoudi/composer:1.8.4-php72
 
 ## Usage examples ##
 
