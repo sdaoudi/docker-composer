@@ -23,6 +23,7 @@ and php 7.2.
     - sdaoudi/composer:1.6.5-php72
     - sdaoudi/composer:1.7.3-php72
     - sdaoudi/composer:1.8.4-php72
+    - sdaoudi/composer:1.9.3-php72
 
 ## Usage examples ##
 
