@@ -59,6 +59,8 @@ all: ## Do the action to all composer version
 	make push  COMPOSER_VERSION=1.8.4 PHP_VERSION=56
 	make build COMPOSER_VERSION=1.8.4 PHP_VERSION=72
 	make push  COMPOSER_VERSION=1.8.4 PHP_VERSION=72
+	make build COMPOSER_VERSION=1.9.3 PHP_VERSION=72
+	make push  COMPOSER_VERSION=1.9.3 PHP_VERSION=72
 
 #####
 build: ## Build an individual image (NODE_VERSION)
