@@ -7,8 +7,7 @@ A minimal Dockerfile based on alpine image.
 
 ## What's included ##
 
-Multiple version of composer with php 5.6 
-and php 7.2.
+Multiple version of composer with php 5.6, 7.2 and 7.3
 
 ## Available tags ##
 
@@ -17,6 +16,7 @@ and php 7.2.
     - sdaoudi/composer:1.6.5-php56
     - sdaoudi/composer:1.7.3-php56
     - sdaoudi/composer:1.8.4-php56
+    - sdaoudi/composer:1.10.15-php56
 
 - PHP72:
     - sdaoudi/composer:1.5.6-php72
@@ -24,6 +24,11 @@ and php 7.2.
     - sdaoudi/composer:1.7.3-php72
     - sdaoudi/composer:1.8.4-php72
     - sdaoudi/composer:1.9.3-php72
+    - sdaoudi/composer:1.10.15-php72
+
+- PHP73:
+    - sdaoudi/composer:1.9.3-php73
+    - sdaoudi/composer:1.10.15-php73
 
 ## Usage examples ##
 
@@ -34,6 +39,10 @@ Composer 1.5.6 with php 5.6 example:
 Composer 1.6.5 with php 7.2 example:
 
     $ docker run --rm -ti sdaoudi/composer:1.6.5-php72 composer -v
+
+Composer 1.10.15 with php 7.3 example:
+
+    $ docker run --rm -ti sdaoudi/composer:1.10.15-php73 composer -v
 
 ## Working directory ##
 
