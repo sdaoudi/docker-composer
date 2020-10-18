@@ -65,14 +65,14 @@ all: ## Do the action to all composer version
 	make push  COMPOSER_VERSION=1.9.3 PHP_VERSION=73
 
 #####
-build: ## Build an individual image (NODE_VERSION)
+build: ## Build an individual image (PHP_VERSION)
 	${DOCKER} build --no-cache ${PROXY_CONFIG} ${BUILD_ARGS} --tag ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION} php${PHP_VERSION}
 
 #####
 deploy: push ## Deploy a specific version
 
 #####
-push: ## push a specific version (NODE_VERSION)
+push: ## push a specific version (PHP_VERSION)
 	${DOCKER} push ${DOCKER_REPOSITORY}:${COMPOSER_VERSION}-php${PHP_VERSION}
 
 #####
