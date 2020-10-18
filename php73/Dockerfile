@@ -61,9 +61,9 @@ RUN apk add --update libressl libressl-dev libssl1.1 \
     php7-zip
 
 # Install Mongodb extension
-RUN apk --update --no-cache add autoconf g++ gcc make pkgconf openssl-dev \
-    pecl install mongodb \
-    pecl clear-cache \
+RUN apk --update --no-cache add autoconf g++ gcc make pkgconf openssl-dev && \
+    pecl install mongodb && \
+    pecl clear-cache && \
     echo "extension=mongodb.so" > /etc/php7/conf.d/00_mongodb.ini
 
 RUN mkdir ${COMPOSER_HOME} \
