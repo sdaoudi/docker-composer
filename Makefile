@@ -61,6 +61,8 @@ all: ## Do the action to all composer version
 	make push  COMPOSER_VERSION=1.8.4 PHP_VERSION=72
 	make build COMPOSER_VERSION=1.9.3 PHP_VERSION=72
 	make push  COMPOSER_VERSION=1.9.3 PHP_VERSION=72
+	make build COMPOSER_VERSION=1.9.3 PHP_VERSION=73
+	make push  COMPOSER_VERSION=1.9.3 PHP_VERSION=73
 
 #####
 build: ## Build an individual image (NODE_VERSION)
@@ -75,5 +77,5 @@ push: ## push a specific version (NODE_VERSION)
 
 #####
 clean: ## Delete any images.
-	${DOCKER} images --quiet sdaoudi/node | xargs ${DOCKER} rmi -f
+	${DOCKER} images --quiet sdaoudi/composer | xargs ${DOCKER} rmi -f
 
