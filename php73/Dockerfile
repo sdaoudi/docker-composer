@@ -50,7 +50,6 @@ RUN apk add --update libressl libressl-dev libssl1.1 \
     php7-mysqli \
     php7-sqlite3 \
     php7-redis \
-    php7-mongodb \
     php7-zlib \
     php7-phar \
     php7-tokenizer \
@@ -60,6 +59,12 @@ RUN apk add --update libressl libressl-dev libssl1.1 \
     php7-xml \
     php7-xsl \
     php7-zip
+
+# Install Mongodb extension
+RUN apk --update --no-cache add autoconf g++ gcc make pkgconf openssl-dev \
+    pecl install mongodb \
+    pecl clear-cache \
+    echo "extension=mongodb.so" > /etc/php7/conf.d/00_mongodb.ini
 
 RUN mkdir ${COMPOSER_HOME} \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
