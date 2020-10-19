@@ -30,6 +30,9 @@ Multiple version of composer with php 5.6, 7.2 and 7.3
     - sdaoudi/composer:1.9.3-php73
     - sdaoudi/composer:1.10.15-php73
 
+- PHP80:
+    - sdaoudi/composer:1.10.15-php80
+
 ## Usage examples ##
 
 Composer 1.5.6 with php 5.6 example:
