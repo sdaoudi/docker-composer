@@ -1,0 +1,20 @@
+version: 2
+updates:
+- package-ecosystem: docker
+  directory: "/php72"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  target-branch: master
+- package-ecosystem: docker
+  directory: "/php56"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  target-branch: master
+  reviewers:
+  - sdaoudi
+  assignees:
+  - sdaoudi
